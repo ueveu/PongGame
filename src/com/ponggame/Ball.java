@@ -21,18 +21,23 @@ public class Ball {
         y += yVelocity;
 
         // Bounce the ball off the top and bottom walls
-        if (y <= 0 || y >= 580) { // 580 is window height minus ball diameter (600 - 20)
+        if (y <= 0 || y >= 600) { // Use window height directly, ball size included
             yVelocity = -yVelocity; // Reserve the balls direction on the y-axis
         }
-        // Bounce the ball off the paddles
-        if (x <= player1.x + player2.width && y >= player1.y && y >= player1.y + player1.height) {
-            xVelocity = - xVelocity; // Reverse the ball's direction on the x-axis when hitting player 1's paddle
+
+        // Collision  with player 1's paddle (left paddle)
+        if (x <= player1.x + player1.width && y + diameter >= player1.y && y <= player1.y + player1.height) {
+            xVelocity = -xVelocity;  // Reverse the ball's direction on the x-axis when hitting player 1's paddle
+            x = player1.x + player1.width; // Adjust ball position to avoid overlap
         }
-        if (x <= player2.x - diameter && y >=player2.y && y <= player2.y + player2.height) {
-            xVelocity = -xVelocity;
+        // Collision with player 2's paddle (right paddle)
+        if (x + diameter >= player2.x && y + diameter >= player2.y && y <= player2.y + player2.height) {
+            xVelocity = -xVelocity;  // Reverse the ball's direction on the x-axis when hitting player 2's paddle
+            x = player2.x - diameter; // Adjust ball position to avoid overlap
         }
+
         // Bounce the ball of the left and right walls (**for testing)
-        if (x <= 0 || x >= 780) { // 780 is windows width minus the ball diameter (800-20)
+        if (x <= 0 || x + diameter >= 800) { // 800 is window width
             xVelocity = -xVelocity; // Reserve the balls direction on the x-axis
 
         }
@@ -43,11 +48,5 @@ public class Ball {
         g.fillOval(x, y, diameter, diameter);  // Draw the ball as a circle
     }
 }
-/*
-- We initialize the ball`s position (x, y) and define its diameter (20pixels).
-- The ball's speed in both the x and y directions is represented by xVelocity and yVelocity.
-- The move() method will update the ball's position during the game loop (*using this later).
-- The draw() method draws the ball as a circle on the screen.
-*/
 
 
