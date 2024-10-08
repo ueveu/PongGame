@@ -28,8 +28,10 @@ public class Ball {
         if (x <= player1.x + player2.width && y >= player1.y && y >= player1.y + player1.height) {
             xVelocity = - xVelocity; // Reverse the ball's direction on the x-axis when hitting player 1's paddle
         }
-        if ()
-        // Bounce the ball of the left and right walls (******for testing, later we'll use the paddles)
+        if (x <= player2.x - diameter && y >=player2.y && y <= player2.y + player2.height) {
+            xVelocity = -xVelocity;
+        }
+        // Bounce the ball of the left and right walls (**for testing)
         if (x <= 0 || x >= 780) { // 780 is windows width minus the ball diameter (800-20)
             xVelocity = -xVelocity; // Reserve the balls direction on the x-axis
 
