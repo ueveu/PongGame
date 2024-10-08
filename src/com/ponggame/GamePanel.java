@@ -2,15 +2,16 @@ package com.ponggame;
 
 import javax.swing.*; // GUI
 import java.awt.*; // Import for graphics
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 
-public class GamePanel extends JPanel implements ActionListener {
+
+public class GamePanel extends JPanel implements ActionListener, KeyListener {
 
     Paddle player1, player2;
     Ball ball;
     Score score;
     Timer timer;
+
 
     GamePanel() {
         // Create player 1 and player 2 paddles
@@ -19,8 +20,12 @@ public class GamePanel extends JPanel implements ActionListener {
         ball = new Ball(390, 290); // Ball starting position in the center of the screen
         score = new Score(800,600); // Initialize the score with the window size
 
+
         this.setPreferredSize(new Dimension(800, 600)); // Set the game window size to 800x600
         this.setBackground(Color.BLACK); // Set the background color to black
+        this.setFocusable(true); // Allow panel to receive keyboard input
+        this.addKeyListener(this); // Add the key Listener to listen for keyboard events
+
 
         // Create a timer that calls the actionPerformed method every 10 milliseconds
         timer = new Timer(10, this); // Updates game every 10 milliseconds
@@ -39,6 +44,9 @@ public class GamePanel extends JPanel implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         ball.move(player1, player2); // Update the ball's position and check for paddle collisions
+        player1.move();
+        player2.move();
+
 
         // Check if player1 or player2 missed the ball
         if (ball.x <= 0) { // player1 missed the ball
@@ -46,12 +54,49 @@ public class GamePanel extends JPanel implements ActionListener {
             resetBall(); // Reset the ball to the center
         }
         if (ball.x >= 780) { // Player2 missed the ball
-            score.player2Score++;
-            resetBall();
+            score.player2Score++; // Increase Player2's score
+            resetBall(); // Reset the ball to the center
         }
 
         repaint(); // repaint the game panel to show the updated ball position
     }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        switch (e.getKeyCode()) {
+            case KeyEvent.VK_W:
+                player1.setYDirection(-5); // Move player 1's paddle up
+                break;
+            case KeyEvent.VK_S:
+                player1.setYDirection(5); // Move Player 1's paddle down
+                break;
+            case KeyEvent.VK_UP:
+                player2.setYDirection(-5); // Move Player 2's paddle up
+                break;
+            case KeyEvent.VK_DOWN:
+                player2.setYDirection(5); // Move Player 2's paddle up
+                break;
+        }
+    }
+
+@Override
+public void keyReleased(KeyEvent e) {
+        switch (e.getKeyCode()) {
+            case KeyEvent.VK_W:
+            case KeyEvent.VK_S:
+                player1.setYDirection(0); // Stop player 1's paddle movement
+                break;
+            case KeyEvent.VK_UP:
+            case KeyEvent.VK_DOWN:
+                player2.setYDirection(0); // Stop player 2's paddle movement
+                break;
+        }
+}
+@Override
+public void keyTyped(KeyEvent e) {
+        // not used
+}
+
     // Reset the ball to the center of the screen after a point is scored
     public void resetBall() {
         ball.x = 390;  // Reset the ball's y position
