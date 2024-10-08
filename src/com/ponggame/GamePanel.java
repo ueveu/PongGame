@@ -42,15 +42,20 @@ public class GamePanel extends JPanel implements ActionListener {
 
         // Check if player1 or player2 missed the ball
         if (ball.x <= 0) { // player1 missed the ball
-            score.player2Score++; // increase playe 2's score
+            score.player2Score++; // increase player 2's score
             resetBall(); // Reset the ball to the center
+        }
+        if (ball.x >= 780) { // Player2 missed the ball
+            score.player2Score++;
+            resetBall();
         }
 
         repaint(); // repaint the game panel to show the updated ball position
     }
     // Reset the ball to the center of the screen after a point is scored
     public void resetBall() {
-        ball.x = 390; ball.y = 290; // Reset ball's x & y position
+        ball.x = 390;  // Reset the ball's y position
+        ball.y = 290; // Reset ball's x position
         ball.xVelocity = -ball.xVelocity; // Reverse the ball's direction after each point
     }
 }
