@@ -35,7 +35,7 @@ public class GamePanel extends JPanel implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        ball.move(); // Update the ball's position
+        ball.move(player1, player2); // Update the ball's position and check for paddle collisions
         repaint(); // repaint the game panel to show the updated ball position
     }
 }
