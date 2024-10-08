@@ -11,7 +11,8 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
     Ball ball;
     Score score;
     Timer timer;
-
+    boolean gameOver = false; // Track if the game is over
+    final int WIN_SCORE = 10; // Score required to win
 
     GamePanel() {
         // Create player 1 and player 2 paddles
@@ -35,50 +36,66 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g); // Clear the screen before redrawing (important for smooth graphics)
-        player1.draw(g); // Draw player 1's paddle
-        player2.draw(g); // Draw player 2's paddle
-        ball.draw(g); // Draw the ball
-        score.draw(g); // Draw the scores
+
+        if(!gameOver) {
+            player1.draw(g); // Draw player 1's paddle
+            player2.draw(g); // Draw player 2's paddle
+            ball.draw(g); // Draw the ball
+            score.draw(g); // Draw the score
+        } else {
+            drawWinner(g); // Draw the Winning Message
+        }
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        ball.move(player1, player2); // Update the ball's position and check for paddle collisions
-        player1.move();
-        player2.move();
+        if (!gameOver) {
+            ball.move(player1, player2); // Update the ball's position and check for paddle collisions
+            player1.move(); // Update player 1's position
+            player2.move(); // Update player 2's position
 
+            // Check if player1 or player2 missed the ball
+            if (ball.x <= 0) { // player1 missed the ball
+                score.player2Score++; // increase player 2's score
+                resetBall(); // Reset the ball to the center
+            }
+            if (ball.x >= 780) { // Player2 missed the ball
+                score.player1Score++; // Increase Player2's score
+                resetBall(); // Reset the ball to the center
+            }
 
-        // Check if player1 or player2 missed the ball
-        if (ball.x <= 0) { // player1 missed the ball
-            score.player2Score++; // increase player 2's score
-            resetBall(); // Reset the ball to the center
+            // Check for win condition
+            if (score.player1Score >= WIN_SCORE) {
+                gameOver = true; // End the game if player 1's score equals WIN_SCORE
+            } else if (score.player2Score >= WIN_SCORE) {
+                gameOver = true; // End the game if player 2's score equals WIN_SCORE
+            }
         }
-        if (ball.x >= 780) { // Player2 missed the ball
-            score.player2Score++; // Increase Player2's score
-            resetBall(); // Reset the ball to the center
-        }
-
-        repaint(); // repaint the game panel to show the updated ball position
+        repaint(); // repaint the game panel to show the updated ball position and scores
     }
 
     @Override
     public void keyPressed(KeyEvent e) {
-        switch (e.getKeyCode()) {
-            case KeyEvent.VK_W:
-                player1.setYDirection(-5); // Move player 1's paddle up
-                break;
-            case KeyEvent.VK_S:
-                player1.setYDirection(5); // Move Player 1's paddle down
-                break;
-            case KeyEvent.VK_UP:
-                player2.setYDirection(-5); // Move Player 2's paddle up
-                break;
-            case KeyEvent.VK_DOWN:
-                player2.setYDirection(5); // Move Player 2's paddle up
-                break;
+        if (gameOver && e.getKeyCode() == KeyEvent.VK_R) {
+            resetGame(); // Reset the Game if "R" sis press
+        } else {
+
+            switch (e.getKeyCode()) {
+                case KeyEvent.VK_W:
+                    player1.setYDirection(-5); // Move player 1's paddle up
+                    break;
+                case KeyEvent.VK_S:
+                    player1.setYDirection(5); // Move Player 1's paddle down
+                    break;
+                case KeyEvent.VK_UP:
+                    player2.setYDirection(-5); // Move Player 2's paddle up
+                    break;
+                case KeyEvent.VK_DOWN:
+                    player2.setYDirection(5); // Move Player 2's paddle up
+                    break;
+            }
         }
     }
-
 @Override
 public void keyReleased(KeyEvent e) {
         switch (e.getKeyCode()) {
@@ -102,5 +119,24 @@ public void keyTyped(KeyEvent e) {
         ball.x = 390;  // Reset the ball's y position
         ball.y = 290; // Reset ball's x position
         ball.xVelocity = -ball.xVelocity; // Reverse the ball's direction after each point
+    }
+
+    // Reset the game to the initial state
+    public void resetGame() {
+        score.reset(); // reset scores to 0
+        resetBall(); // reset ball position
+        player1.y = 250; // Reset player 1's paddle position
+        player2.y = 250; // Reset Player 2's paddle position
+        gameOver = false; // resume the game
+    }
+
+    // Draw the winning message
+    public void drawWinner(Graphics g) {
+        g.setColor(Color.WHITE);
+        g.setFont(new Font("Consolas", Font.BOLD, 50));
+        String winner = score.player1Score <= WIN_SCORE ? "Player 1 Wins" : "Player 2 Wins";
+        g.drawString(winner, 250, 300); // Draw the winner text in the middle of the screen
+        g.setFont(new Font("Consolas", Font.PLAIN, 30));
+        g.drawString("Press 'R' to Restart", 250, 350); // Prompt to restart
     }
 }

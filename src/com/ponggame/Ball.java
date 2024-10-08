@@ -5,8 +5,8 @@ import java.awt.*; // import for drawing the ball
 
 public class Ball {
     int x,y, diameter = 20; // Ball and position size
-    int xVelocity = 2; // Ball speed in x direction
-    int yVelocity = 2; // Ball speed y direction
+    int xVelocity = 5; // Ball speed in x direction
+    int yVelocity = 5; // Ball speed y direction
 
     // Constructor to initialize ball's position
     Ball(int x, int y) {
