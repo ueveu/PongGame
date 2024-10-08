@@ -1,8 +1,8 @@
 package com.ponggame;
 
-import javax.swing.*; // GUI
-import java.awt.*; // Import for graphics
-import java.awt.event.*;
+import java.awt.*; // GUI
+import java.awt.event.*; // Import for graphics
+import javax.swing.*;
 
 
 public class GamePanel extends JPanel implements ActionListener, KeyListener {
@@ -82,37 +82,40 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 
             switch (e.getKeyCode()) {
                 case KeyEvent.VK_W:
-                    player1.setYDirection(-5); // Move player 1's paddle up
+                    player1.setYDirection(-10); // Move player 1's paddle up (speed)
                     break;
                 case KeyEvent.VK_S:
-                    player1.setYDirection(5); // Move Player 1's paddle down
+                    player1.setYDirection(10); // Move Player 1's paddle down (speed)
                     break;
                 case KeyEvent.VK_UP:
-                    player2.setYDirection(-5); // Move Player 2's paddle up
+                    player2.setYDirection(-10); // Move Player 2's paddle up (speed)
                     break;
                 case KeyEvent.VK_DOWN:
-                    player2.setYDirection(5); // Move Player 2's paddle up
+                    player2.setYDirection(10); // Move Player 2's paddle up (speed
                     break;
             }
         }
     }
+// KeyReleased method to stop the paddle when the key is released
 @Override
-public void keyReleased(KeyEvent e) {
-        switch (e.getKeyCode()) {
-            case KeyEvent.VK_W:
-            case KeyEvent.VK_S:
+public void keyReleased(KeyEvent e) { // Method to handle key release events
+        switch (e.getKeyCode()) { // Switch statement to handle different key codes
+            case KeyEvent.VK_W: // If the W key is released
+            case KeyEvent.VK_S: // If the S key is released
                 player1.setYDirection(0); // Stop player 1's paddle movement
                 break;
-            case KeyEvent.VK_UP:
-            case KeyEvent.VK_DOWN:
+            case KeyEvent.VK_UP: // If the UP key is released
+            case KeyEvent.VK_DOWN: // If the DOWN key is released
                 player2.setYDirection(0); // Stop player 2's paddle movement
                 break;
         }
 }
+
+// KeyTyped method to ignore other keys
 @Override
 public void keyTyped(KeyEvent e) {
-        // not used
-}
+            // not used
+    }
 
     // Reset the ball to the center of the screen after a point is scored
     public void resetBall() {
@@ -131,12 +134,12 @@ public void keyTyped(KeyEvent e) {
     }
 
     // Draw the winning message
-    public void drawWinner(Graphics g) {
-        g.setColor(Color.WHITE);
-        g.setFont(new Font("Consolas", Font.BOLD, 50));
-        String winner = score.player1Score <= WIN_SCORE ? "Player 1 Wins" : "Player 2 Wins";
+    public void drawWinner(Graphics g) { //method to draw the winner message
+        g.setColor(Color.WHITE); // Set the color to white
+        g.setFont(new Font("Consolas", Font.BOLD, 50)); // Set the font to Consolas, bold, and size 50
+        String winner = score.player1Score <= WIN_SCORE ? "Player 1 Wins" : "Player 2 Wins"; // Determine the winner based on the score
         g.drawString(winner, 250, 300); // Draw the winner text in the middle of the screen
-        g.setFont(new Font("Consolas", Font.PLAIN, 30));
+        g.setFont(new Font("Consolas", Font.PLAIN, 30)); // Set the font to Consolas, plain, and size 30
         g.drawString("Press 'R' to Restart", 250, 350); // Prompt to restart
     }
 }
